@@ -549,7 +549,7 @@ function App() {
               </div>
               <h1 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
                 Omar Kamel<br/>
-                <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-300 bg-clip-text text-transparent">Sayed</span>
+                <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-300 bg-clip-text text-transparent">Elsharaby</span>
               </h1>
               <div className="h-8 mb-6">
                 <span className="text-xl md:text-2xl text-slate-300 font-mono">
@@ -1224,7 +1224,7 @@ function App() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <span className="text-lg font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Omar.dev</span>
-            <p className="text-slate-500 text-xs mt-1">© {new Date().getFullYear()} Omar Kamel Sayed. All rights reserved.</p>
+            <p className="text-slate-500 text-xs mt-1">© {new Date().getFullYear()} Omar Kamel Elsharaby. All rights reserved.</p>
           </div>
           <div className="flex gap-5">
             <a href="https://www.linkedin.com/in/omar-kamel-8645b5268/" target="_blank" rel="noreferrer" className="text-slate-500 hover:text-blue-400 transition"><Linkedin size={20}/></a>
