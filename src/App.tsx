@@ -339,12 +339,12 @@ function App() {
   const [savedStates, setSavedStates] = useState({ skills, experiences, projects, education, certificates });
 
   /* ─── Persist ──────────────────────────────────────── */
-  useEffect(() => { localStorage.setItem('skills',       JSON.stringify(skills));       }, [skills]);
-  useEffect(() => { localStorage.setItem('experiences',  JSON.stringify(experiences));  }, [experiences]);
-  useEffect(() => { localStorage.setItem('projects',     JSON.stringify(projects));     }, [projects]);
-  useEffect(() => { localStorage.setItem('education',    JSON.stringify(education));    }, [education]);
-  useEffect(() => { localStorage.setItem('certificates', JSON.stringify(certificates)); }, [certificates]);
-  useEffect(() => { localStorage.setItem('profileImage', profileImage);                }, [profileImage]);
+  useEffect(() => { try { localStorage.setItem('skills',       JSON.stringify(skills));       } catch(e){} }, [skills]);
+  useEffect(() => { try { localStorage.setItem('experiences',  JSON.stringify(experiences));  } catch(e){} }, [experiences]);
+  useEffect(() => { try { localStorage.setItem('projects',     JSON.stringify(projects));     } catch(e){} }, [projects]);
+  useEffect(() => { try { localStorage.setItem('education',    JSON.stringify(education));    } catch(e){} }, [education]);
+  useEffect(() => { try { localStorage.setItem('certificates', JSON.stringify(certificates)); } catch(e){} }, [certificates]);
+  useEffect(() => { try { localStorage.setItem('profileImage', profileImage);                } catch(e){} }, [profileImage]);
 
   /* ─── Active section tracker ───────────────────────── */
   useEffect(() => {
@@ -369,6 +369,10 @@ function App() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Photo file is too large for local storage (max 2MB).');
+      return;
+    }
     const reader = new FileReader();
     reader.onloadend = () => setProfileImage(reader.result as string);
     reader.readAsDataURL(file);
@@ -376,13 +380,17 @@ function App() {
 
   const handleCertImageUpload = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert('File is larger than 2MB. Please enter the PDF or Image path URL (e.g. /certificates/filename.pdf) directly in edit mode to save without storage limits.');
+      return;
+    }
     if (file.type === 'application/pdf') {
       const reader = new FileReader();
-      reader.onloadend = () => setCertificates(cs => cs.map(c => c.id===id ? {...c, pdf: reader.result as string, image: ''} : c));
+      reader.onloadend = () => setCertificates(cs => cs.map(c => c.id===id ? {...c, pdf: reader.result as string} : c));
       reader.readAsDataURL(file);
     } else {
       const reader = new FileReader();
-      reader.onloadend = () => setCertificates(cs => cs.map(c => c.id===id ? {...c, image: reader.result as string, pdf: ''} : c));
+      reader.onloadend = () => setCertificates(cs => cs.map(c => c.id===id ? {...c, image: reader.result as string} : c));
       reader.readAsDataURL(file);
     }
   };
@@ -961,12 +969,22 @@ function App() {
                     {editMode.certificates ? (
                       <div className="space-y-2.5">
                         <input value={cert.title} onChange={e=>setCertificates(cs=>cs.map(c=>c.id===cert.id?{...c,title:e.target.value}:c))}
+                          placeholder="Certificate Title"
                           className="bg-slate-900 text-white font-bold border border-slate-700 rounded px-2.5 py-1 w-full text-sm focus:border-blue-400 focus:outline-none"/>
                         <input value={cert.organization} onChange={e=>setCertificates(cs=>cs.map(c=>c.id===cert.id?{...c,organization:e.target.value}:c))}
+                          placeholder="Organization"
                           className="bg-slate-900 text-slate-300 text-sm border border-slate-700 rounded px-2.5 py-1 w-full focus:border-blue-400 focus:outline-none"/>
                         <input value={cert.date} onChange={e=>setCertificates(cs=>cs.map(c=>c.id===cert.id?{...c,date:e.target.value}:c))}
+                          placeholder="Date"
                           className="bg-slate-900 text-slate-400 text-xs border border-slate-700 rounded px-2.5 py-1 w-full focus:border-blue-400 focus:outline-none"/>
+                        <input value={cert.pdf || ''} onChange={e=>setCertificates(cs=>cs.map(c=>c.id===cert.id?{...c,pdf:e.target.value}:c))}
+                          placeholder="PDF URL (e.g. /certificates/technology.pdf)"
+                          className="bg-slate-900 text-cyan-300 text-xs border border-slate-700 rounded px-2.5 py-1 w-full focus:border-blue-400 focus:outline-none font-mono"/>
+                        <input value={cert.image || ''} onChange={e=>setCertificates(cs=>cs.map(c=>c.id===cert.id?{...c,image:e.target.value}:c))}
+                          placeholder="Image URL (e.g. /certificates/zewail.jpg)"
+                          className="bg-slate-900 text-blue-300 text-xs border border-slate-700 rounded px-2.5 py-1 w-full focus:border-blue-400 focus:outline-none font-mono"/>
                         <textarea value={cert.caption} rows={2} onChange={e=>setCertificates(cs=>cs.map(c=>c.id===cert.id?{...c,caption:e.target.value}:c))}
+                          placeholder="Caption / Description"
                           className="bg-slate-900 text-slate-300 text-xs border border-slate-700 rounded px-2.5 py-1 w-full resize-none focus:border-blue-400 focus:outline-none"/>
                       </div>
                     ) : (
