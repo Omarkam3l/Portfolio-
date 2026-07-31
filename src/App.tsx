@@ -220,9 +220,9 @@ function App() {
   });
 
   const [certificates, setCertificates] = useState<Certificate[]>(() => {
-    if (localStorage.getItem('certs_version') !== '12') {
+    if (localStorage.getItem('certs_version') !== '15') {
       localStorage.removeItem('certificates');
-      localStorage.setItem('certs_version', '12');
+      localStorage.setItem('certs_version', '15');
     }
     const s = localStorage.getItem('certificates');
     return s ? JSON.parse(s) : [
@@ -241,7 +241,7 @@ function App() {
         organization:'NVIDIA Deep Learning Institute (DLI) via ITI',
         date:'2025',
         image:'/certificates/nvidia_beg.jpg',
-        pdf:'',
+        pdf:'/certificates/nvidia_adv.pdf',
         caption:'Prompt Engineering, Augmenting LLMs with RAG & Vector Embeddings'
       },
       {
@@ -1048,21 +1048,41 @@ function App() {
             <div className="p-4 md:p-6 flex-1 overflow-y-auto flex items-center justify-center bg-slate-950/60 min-h-[60vh]">
               {modalMode === 'pdf' && selectedCert.pdf ? (
                 <div className="w-full h-[72vh] flex flex-col">
-                  <iframe 
-                    src={`${selectedCert.pdf}#toolbar=1`} 
-                    className="w-full h-full rounded-xl border border-slate-800/80 bg-slate-950 shadow-inner" 
-                    title={selectedCert.title}
-                  />
+                  <object
+                    data={`${selectedCert.pdf}#toolbar=1`}
+                    type="application/pdf"
+                    className="w-full h-full rounded-xl border border-slate-800/80 bg-slate-950 shadow-inner"
+                  >
+                    <iframe 
+                      src={`${selectedCert.pdf}#toolbar=1`} 
+                      className="w-full h-full rounded-xl" 
+                      title={selectedCert.title}
+                    >
+                      <div className="flex flex-col items-center justify-center h-full p-6 text-center text-slate-400 gap-3">
+                        <FileText size={40} className="text-blue-400"/>
+                        <p className="text-sm">Unable to render PDF preview inside frame.</p>
+                        <a href={selectedCert.pdf} target="_blank" rel="noreferrer" className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-semibold">
+                          Open PDF Document
+                        </a>
+                      </div>
+                    </iframe>
+                  </object>
                 </div>
               ) : selectedCert.image ? (
                 <img src={selectedCert.image} alt={selectedCert.title} className="max-w-full max-h-[70vh] object-contain rounded-xl shadow-2xl border border-slate-800"/>
               ) : selectedCert.pdf ? (
                 <div className="w-full h-[72vh] flex flex-col">
-                  <iframe 
-                    src={`${selectedCert.pdf}#toolbar=1`} 
-                    className="w-full h-full rounded-xl border border-slate-800/80 bg-slate-950 shadow-inner" 
-                    title={selectedCert.title}
-                  />
+                  <object
+                    data={`${selectedCert.pdf}#toolbar=1`}
+                    type="application/pdf"
+                    className="w-full h-full rounded-xl border border-slate-800/80 bg-slate-950 shadow-inner"
+                  >
+                    <iframe 
+                      src={`${selectedCert.pdf}#toolbar=1`} 
+                      className="w-full h-full rounded-xl" 
+                      title={selectedCert.title}
+                    />
+                  </object>
                 </div>
               ) : (
                 <div className="text-slate-500 py-12 text-center">No document or image available</div>
