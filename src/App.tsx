@@ -1234,6 +1234,28 @@ function App() {
         </div>
       </footer>
 
+      {/* ── Floating Owner Admin Toolbar ── */}
+      {isAdmin && (
+        <div className="fixed bottom-4 right-4 z-50 bg-slate-900/95 border border-blue-500/40 backdrop-blur-md rounded-2xl p-4 shadow-2xl flex items-center gap-3">
+          <div className="flex flex-col">
+            <span className="text-xs font-bold text-white flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"/> Owner Admin Mode
+            </span>
+            <span className="text-[10px] text-slate-400">Copy your UI edits to paste & push to GitHub</span>
+          </div>
+          <button
+            onClick={() => {
+              const data = { skills, experiences, projects, education, certificates };
+              navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+              alert('All your edited portfolio data has been copied to your clipboard! Paste it into the chat so I can push it to GitHub.');
+            }}
+            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white px-3.5 py-2 rounded-xl text-xs font-semibold shadow-lg transition flex items-center gap-1.5"
+          >
+            <Copy size={14}/> Copy All Edits
+          </button>
+        </div>
+      )}
+
     </div>
   );
 }
