@@ -220,9 +220,9 @@ function App() {
   });
 
   const [certificates, setCertificates] = useState<Certificate[]>(() => {
-    if (localStorage.getItem('certs_version') !== '8') {
+    if (localStorage.getItem('certs_version') !== '12') {
       localStorage.removeItem('certificates');
-      localStorage.setItem('certs_version', '8');
+      localStorage.setItem('certs_version', '12');
     }
     const s = localStorage.getItem('certificates');
     return s ? JSON.parse(s) : [
